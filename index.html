@@ -329,9 +329,15 @@
                 `Teléfono: ${telefono}`,
                 correo ? `Correo: ${correo}` : null,
                 mensaje ? `Mensaje: ${mensaje}` : null
-            ].filter(Boolean).join('%0A');
+            ].filter(Boolean).join('\n');
 
-            window.open(`https://wa.me/51900449322?text=${texto}`, '_blank', 'noopener,noreferrer');
+            // encodeURIComponent es obligatorio: sin esto, tildes, ñ, "&", "#"
+            // y otros caracteres rompen o truncan el enlace de WhatsApp.
+            const url = `https://wa.me/51900449322?text=${encodeURIComponent(texto)}`;
+
+            // location.href es más confiable que window.open en navegadores
+            // móviles, donde las ventanas emergentes suelen bloquearse.
+            window.location.href = url;
             formulario.reset();
         });
     </script>
